@@ -1,0 +1,44 @@
+" Press ? for help
+
+.. (up a dir)
+</Projects/ember/new/bb-player/
+▾ app/
+  ▾ css/
+      main.css*
+  ▾ lib/
+    ▸ controllers/
+    ▸ libs/
+    ▾ models/
+        channel.js*
+        language.js*
+        stream.js*
+    ▸ views/
+      controllers.js*
+      core.js*
+      env.js*
+      ext.js*
+      libs.js*
+      main.js*
+      models.js*
+      router.js*
+      store.js*
+      views.js*
+  ▾ plugins/
+      loader.js*
+  ▸ static/
+  ▸ templates/
+  ▸ tests/
+  ▸ vendor/
+▸ assets/
+▸ tests/
+▸ tmp/
+  Assetfile*
+  config.ru*
+  Gemfile*
+  Gemfile.lock*
+  Guardfile*
+  index.html*
+  LICENSE*
+  Rakefile*
+  README.md*
+  TODO.md*

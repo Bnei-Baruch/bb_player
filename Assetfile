@@ -1,0 +1,103 @@
+APPNAME = 'bb-player'
+
+require 'json'
+require 'rake-pipeline-web-filters'
+
+WebFilters = Rake::Pipeline::Web::Filters
+
+class EmberAssertFilter < Filter
+  def generate_output(inputs, output)
+    inputs.each do |input|
+      result = input.read
+      result.gsub!(%r{^(\s)*Ember\.(assert|deprecate|warn)\((.*)\).*$}, '')
+      output.write(result)
+    end
+  end
+end
+
+output 'assets'
+
+input 'app' do
+  match 'lib/**/*.js' do
+    minispade(
+      :rewrite_requires => true, 
+      :string => false, 
+      :module_id_generator => Proc.new { |input|
+        input.path.dup.sub(/^lib\//, "#{APPNAME}/").sub(/\.js$/, '')
+       }
+    )
+
+    if ENV['RAKEP_MODE'] == 'production'
+      filter EmberAssertFilter
+      uglify { |input| input }
+    end
+    concat 'app.js'
+  end
+
+  match 'templates/**/*.handlebars' do
+    handlebars :key_name_proc => Proc.new { |input| 
+      input.path.\
+        gsub(/\.handlebars$/, '').\
+        gsub(/^templates\//, '')
+    }
+    if ENV['RAKEP_MODE'] == 'production'
+      uglify { |input| input }
+    end
+    concat 'app.js'
+  end
+
+  match 'vendor/**/*.js' do
+    if ENV['RAKEP_MODE'] == 'production'
+      filter EmberAssertFilter
+      uglify { |input| input }
+    end
+    concat 'vendor.js'
+    #filter(
+      #Rake::Pipeline::OrderingConcatFilter, 
+      #[
+        #"jquery.js", 
+        #"handlebars.js", 
+        #"3.ember.js",
+        #"4.ember-data.js",
+        #"minispade.js"
+      #], 
+      #"vendor.js"
+    #)
+    
+  end
+
+
+  match 'tests/**/*.js' do
+    minispade(
+      :rewrite_requires => true, 
+      :string => false, 
+      :module_id_generator => Proc.new { |input|
+        input.path.dup.sub(/^lib\//, "#{APPNAME}/").sub(/\.js$/, '')
+       }
+    )
+    concat 'app-tests.js'
+  end
+
+  match 'css/**/*.css' do
+    if ENV['RAKEP_MODE'] == 'production'
+      yui_css
+    end
+    concat 'app.css'
+  end
+
+  match 'css/**/*.scss' do
+    sass
+    if ENV['RAKEP_MODE'] == 'production'
+      yui_css
+    end
+    concat 'app.css'
+  end
+
+  match "static/**/*" do
+    concat do |input|
+      input.sub(/static\//, '')
+    end
+  end
+end
+
+# vim: filetype=ruby
