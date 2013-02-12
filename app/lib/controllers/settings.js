@@ -3,15 +3,21 @@ App.SettingsController = Ember.Controller.extend({
   playerHeight: 480,
   defaultLanguage: 'he',
   prefferedPlayer: 'jwplayer', // support for 'flowplayer' or 'jwplayer'
-  supportHLSFlashMode: false, //only when jwplayer is used
-  techPriorities: ['hls', 'flash', 'icecast'],
-  technologies: [1, 2],
+  supportHLSFlashMode: true, //only when jwplayer is used
+  techPriorities: ['hls', 'flash', 'icecast', 'kuku'],
+  technologies: [],
   channelName: 'tv66',
 
-  needs: ['technologyDetection'],
-  technologyDetection: function() {
-    return this.controllerFor('technologyDetection');
-  }.property(),
+  init: function() {
+    this.set('technologyDetection', App.TechnologyDetection.create({supportHLSFlashMode: this.get('supportHLSFlashMode')}));
+    this.techPriorities.forEach(function(item) {
+      var name = item + 'Support';
+      if (this.get('technologyDetection.' + name)) {
+        this.technologies.push(item);
+      }
+    }, this);
+    this._super();
+  }
 
 });
 

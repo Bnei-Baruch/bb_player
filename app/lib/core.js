@@ -1,8 +1,3 @@
-//require('jquery');
-//require('handlebars');
-//require('ember');
-//require('ember-data');
-//require('mobile-detect');
 require('bb-player/ext');
 require('bb-player/env');
 

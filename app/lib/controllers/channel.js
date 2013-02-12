@@ -5,12 +5,12 @@ App.ChannelController = Ember.ObjectController.extend({
   displaySlide: false, //TODO: Do we need it?
   languages: null,
   channelName: null,
-  
+
   // Bindings
   currentVersionBinding: 'version',
   currentStatusBinding: 'status',
   channelNameBinding: 'settings.channelName',
-  
+
   poller: App.Poller.create(),
 
   // Observers
@@ -33,7 +33,7 @@ App.ChannelController = Ember.ObjectController.extend({
     // default language in the list
     // status is open
     var statusIsOpen = this.get('currentStatus') === 'open',
-      languagePresent = !Em.isEmpty(this.get('currentLanguage'));
+    languagePresent = !Em.isEmpty(this.get('currentLanguage'));
 
     return statusIsOpen && languagePresent;
   }.property('currentLanguage', 'currentStatus'),
