@@ -24,7 +24,7 @@ input 'app' do
       :string => false, 
       :module_id_generator => Proc.new { |input|
         input.path.dup.sub(/^lib\//, "#{APPNAME}/").sub(/\.js$/, '')
-       }
+      }
     )
 
     if ENV['RAKEP_MODE'] == 'production'
@@ -43,6 +43,7 @@ input 'app' do
     if ENV['RAKEP_MODE'] == 'production'
       uglify { |input| input }
     end
+
     concat 'app.js'
   end
 
@@ -53,17 +54,17 @@ input 'app' do
     end
     concat 'vendor.js'
     #filter(
-      #Rake::Pipeline::OrderingConcatFilter, 
-      #[
-        #"jquery.js", 
-        #"handlebars.js", 
-        #"3.ember.js",
-        #"4.ember-data.js",
-        #"minispade.js"
-      #], 
-      #"vendor.js"
+    #Rake::Pipeline::OrderingConcatFilter, 
+    #[
+    #"jquery.js", 
+    #"handlebars.js", 
+    #"3.ember.js",
+    #"4.ember-data.js",
+    #"minispade.js"
+    #], 
+    #"vendor.js"
     #)
-    
+
   end
 
 
@@ -73,7 +74,7 @@ input 'app' do
       :string => false, 
       :module_id_generator => Proc.new { |input|
         input.path.dup.sub(/^lib\//, "#{APPNAME}/").sub(/\.js$/, '')
-       }
+      }
     )
     concat 'app-tests.js'
   end
