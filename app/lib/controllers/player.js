@@ -18,9 +18,6 @@ App.PlayerController = Ember.ArrayController.extend({
     return this.controllerFor('channel');
   }.property(),
 
-  // Bindings
-  //currentStreamBinding: 'this.firstObject', 
-
   // Computed properties
   currentStream: function() {
     var idx = this.get('_currentIndex');
