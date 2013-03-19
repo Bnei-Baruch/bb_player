@@ -1,7 +1,7 @@
 require 'rake-pipeline'
 require 'rake-pipeline/middleware'
-#use Rake::Pipeline::Middleware, Rake::Pipeline::Project.new('Assetfile')
-use Rake::Pipeline::Middleware, 'Assetfile'
+use Rake::Pipeline::Middleware, Rake::Pipeline::Project.new('Assetfile')
+#use Rake::Pipeline::Middleware, 'Assetfile'
 
 # require 'rack/streaming_proxy'
 # use Rack::StreamingProxy do |request|
@@ -16,7 +16,9 @@ use Rake::Pipeline::Middleware, 'Assetfile'
 
 require 'rack-rewrite'
 use Rack::Rewrite do
-  rewrite %r{^(.*)\/$}, '$1/index.html'
+  rewrite %r{^/player/$}, '/index.html'
+  rewrite %r{^/player/(.*)$}, '/$1'
+  #rewrite %r{^(.*)\/$}, '$1/index.html'
 end
 
 run Rack::Directory.new('.')

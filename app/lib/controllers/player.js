@@ -35,6 +35,15 @@ App.PlayerController = Ember.ArrayController.extend({
     var tech = this.get('settings.technologies');
     return tech[this.get('_currentTechnologyIndex')];
   }.property('_currentTechnologyIndex'),
+  isIcecast: function(){
+   return 'icecast' === this.get('streamTechnologyType');
+  }.property('streamTechnologyType'),
+  isHls: function(){
+   return 'hls' === this.get('streamTechnologyType');
+  }.property('streamTechnologyType'),
+  isFlash: function(){
+   return 'flash' === this.get('streamTechnologyType');
+  }.property('streamTechnologyType'),
 
   //functions
   playNextStream: function() {

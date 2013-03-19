@@ -7,7 +7,7 @@
 
 ## version 0.2
 * Show slides
-* Show error messages
+[[*]] Show error messages
 * change language, quality, server location (including setup to enable/disable) - GUI
 * send error message to developer
 

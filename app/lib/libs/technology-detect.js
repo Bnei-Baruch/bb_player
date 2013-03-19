@@ -1,8 +1,9 @@
 App.TechnologyDetection = Ember.Object.extend({
   supportHLSFlashMode: false,
   flashSupport: function(){
-    // flowplayer has flash detection property
-    return flowplayer.support.flashVideo;
+    // FlashDetect - http://www.featureblend.com/javascript-flash-detection-library.html
+    //return false;
+    return FlashDetect.installed;
   }.property(),
   hlsSupport: function(){
     //iOS or safari or non mobile hls flash mode

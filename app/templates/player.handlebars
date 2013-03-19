@@ -1,4 +1,11 @@
-{{#with currentStream}}
-  {{url}}
-  {{view App.PlayerWrapperView}}
-{{/with}}
+url: {{currentStream.url}}
+  {{!view App.PlayerWrapperView}}
+{{#if isIcecast}}
+    i{{render 'icecast' currentStream}}i
+{{/if}}
+{{#if isHls}}
+    i{{render 'hls' currentStream}}i
+{{/if}}
+{{#if isFlash}}
+    i{{render 'flash' currentStream}}i
+{{/if}}

@@ -1,6 +1,6 @@
 /*!
 
-   Flowplayer v5.3.1 (Monday, 21. January 2013 04:09PM) | flowplayer.org/license
+   Flowplayer v5.3.2 (Monday, 28. January 2013 10:02AM) | flowplayer.org/license
 
 */
 !function($) { 
@@ -56,7 +56,7 @@ window.flowplayer = function(fn) {
 
 $.extend(flowplayer, {
 
-   version: '5.3.1',
+   version: '5.3.2',
 
    engine: {},
 
@@ -89,7 +89,7 @@ $.extend(flowplayer, {
 
       splash: false,
 
-      swf: "http://releases.flowplayer.org/5.3.1/flowplayer.swf",
+      swf: "http://releases.flowplayer.org/5.3.2/flowplayer.swf",
 
       speeds: [0.25, 0.5, 1, 1.5, 2],
 
@@ -266,7 +266,12 @@ $.fn.flowplayer = function(opts, callback) {
          },
 
          volume: function(level) {
-            if (api.ready) engine.volume(Math.min(Math.max(level, 0), 1));
+            if (api.ready) {
+              level = Math.min(Math.max(level, 0), 1);
+              storage.volume = level;
+              engine.volume(level);
+            }
+            
             return api;
          },
 
@@ -1501,13 +1506,14 @@ flowplayer(function(api, root) {
       }
    });
 
-   // is-poster
+   // poster -> background image
    if (conf.poster) root.css("backgroundImage", "url(" + conf.poster + ")");
 
    var bc = root.css("backgroundColor"),
-      bg = root.css("backgroundImage") != "none" || bc && bc != "rgba(0, 0, 0, 0)" && bc != "transparent";
+      has_bg = root.css("backgroundImage") != "none" || bc && bc != "rgba(0, 0, 0, 0)" && bc != "transparent";
 
-   if (!conf.autoplay && !conf.splash && bg) {
+   // is-poster class
+   if (has_bg && !conf.splash && !conf.autoplay) {
 
       api.bind("ready stop", function() {
          root.addClass("is-poster").one("ready progress", function() {
@@ -1515,6 +1521,11 @@ flowplayer(function(api, root) {
          });
       });
 
+   }
+
+   // default background color if not present
+   if (!has_bg && !support.firstframe) {
+      root.css("backgroundColor", "#555");
    }
 
    $(".fp-toggle, .fp-play", root).click(api.toggle);
@@ -1634,8 +1645,8 @@ flowplayer(function(api, root) {
    ');
 
    if (api.conf.tooltip) {
-      api.bind("ready unload", function(e) {
-         $(".fp-ui", root).attr("title", e.type == "ready" ? "Hit ? for help" : "");
+      $(".fp-ui", root).attr("title", "Hit ? for help").on("mouseout.tip", function() {
+         $(this).removeAttr("title").off("mouseout.tip");
       });
    }
 
@@ -1764,7 +1775,7 @@ flowplayer(function(player, root) {
 
       /* click -> play */
       root.on("click", conf.query, function(e) {
-         var el = $(e.target);
+         var el = $(e.target).closest(conf.query);
          el.is("." + klass) ? player.toggle() : player.load(el.attr("href"));
          e.preventDefault();
       });
@@ -2021,11 +2032,14 @@ flowplayer(function(player, root) {
 
    var id = player.conf.analytics, time = 0, last = 0;
 
-   if (id && typeof _gat !== 'undefined') {
+   if (id) {
+
+      // load Analytics script if needed
+      if (typeof _gat == 'undefined') $.getScript("http://www.google-analytics.com/ga.js");
 
       function track(e) {
 
-         if (time) {
+         if (time && typeof _gat != 'undefined') {
             var tracker = _gat._getTracker(id),
                video = player.video;
 
@@ -2075,9 +2089,14 @@ if (flowplayer.support.touch) {
          isAndroid && player.toggle();
 
       }).bind("touchstart", function(e) {
+
          if (player.playing && !root.hasClass("is-mouseover")) {
-            root.addClass("is-mouseover");
+            root.addClass("is-mouseover").removeClass("is-mouseout");
             return false;
+         }
+
+         if (player.paused && root.hasClass("is-mouseout")) {
+            player.toggle();
          }
 
       });
@@ -2146,7 +2165,7 @@ flowplayer(function(player, root) {
          tag.append($("<source/>", { type: "video/" + src.type, src: src.src }));
       });
 
-      var code = $("<foo/>", { src: "http://embed.flowplayer.org/5.3.1/embed.min.js" }).append(el);
+      var code = $("<foo/>", { src: "http://embed.flowplayer.org/5.3.2/embed.min.js" }).append(el);
       return $("<p/>").append(code).html().replace(/<(\/?)foo/g, "<$1script");
    };
 
