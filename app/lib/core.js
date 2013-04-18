@@ -10,7 +10,10 @@ App = Ember.Application.create({
   },
   customEvents: {
     // player event
-    'playererror': "playerError"
+    'playererror': "playerError",
+    //'playaudio': "playAudio"
+    'volumechange': "volumeChange"
+    //'stop': "stop"
   }
 });
 

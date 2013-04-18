@@ -1,12 +1,13 @@
 App.PlayerController = Ember.ArrayController.extend({
   init: function() {
-    this._getStreamData();
     this._super();
+    this._getStreamData();
   },
 
   // Properties
   _currentIndex: 0,
   _currentTechnologyIndex: 0,
+  names: ["Rami", "Moshe"],
 
   // Settings
   needs: ['channel'],

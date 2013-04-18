@@ -4,3 +4,5 @@ assets/
 .rvmrc
 .sass-cache/
 tags
+.ruby-version
+.ruby-gemset

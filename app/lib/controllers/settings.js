@@ -4,7 +4,8 @@ App.SettingsController = Ember.Controller.extend({
   defaultLanguage: 'he',
   prefferedPlayer: 'jwplayer', // support for 'flowplayer' or 'jwplayer'
   supportHLSFlashMode: true, //only when jwplayer is used
-  techPriorities: ['hls', 'flash', 'icecast'],
+  //techPriorities: ['hls', 'flash', 'icecast'],
+  techPriorities: ['icecast'],
   technologies: [],
   channelName: 'tv66',
 

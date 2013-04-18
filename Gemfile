@@ -1,5 +1,3 @@
-source :rubygems
-
 gem 'colored'
 
 gem 'guard'

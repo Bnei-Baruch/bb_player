@@ -9,3 +9,9 @@ url: {{currentStream.url}}
 {{#if isFlash}}
     i{{render 'flash' currentStream}}i
 {{/if}}
+Quality: {{view Ember.Select 
+            contentBinding="controller.content"
+            optionValuePath="content.id"
+            optionLabelPath="content.quality"
+            selectionBinding="controller.currentStream"
+         }}

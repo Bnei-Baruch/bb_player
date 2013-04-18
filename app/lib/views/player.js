@@ -19,10 +19,11 @@ App.GenericPlayerView = Ember.View.extend({
     var self = this;
     playerSetup = {
       file: this.get('controller.url'),
-      height: 480,
-      width: 640,
+      height: this.get('controller.settings.playerHeight'),
+      width: this.get('controller.settings.playerWidth'),
       autostart: true,
-      primary: primary
+      primary: primary,
+      skin: 'stormtrooper'
     };
     
     jwplayer("player").setup(playerSetup);
@@ -48,15 +49,11 @@ App.GenericPlayerView = Ember.View.extend({
 
 App.IcecastView = App.GenericPlayerView.extend({
   templateName: 'icecast',
-  
-  didInsertElement: function() {
-    var stream = {
-      title: "Audio stream player",
-      mp3: this.get('controller.url')
-    },
-    ready = false;
-
-    $("#jquery_jplayer_1").jPlayer({
+  playerId: 'jplayer_1',
+  setupPlayer: function(stream) {
+    var ready = false;
+    
+    $("#" + this.get('playerId')).jPlayer({
       ready: function (event) {
         ready = true;
         $(this).jPlayer("setMedia", stream).jPlayer('play');
@@ -72,33 +69,58 @@ App.IcecastView = App.GenericPlayerView.extend({
           self.$().trigger('playererror');
         }
       },
-      swfPath: "swf",
+      swfPath: "assets/swf",
       supplied: "mp3",
       preload: "none",
       wmode: "window"
     });
-  }
+  },
+  
+  didInsertElement: function() {
+    var stream = {
+      title: "Audio stream player",
+      mp3: this.get('controller.url')
+    };
+    this.setupPlayer(stream);
+  },
+  restartPlayer: function() {
+    var stream = {
+      title: "Audio stream player",
+      mp3: this.get('controller.url')
+    };
+     $("#" + this.get('playerId')).jPlayer('destroy');
+    this.setupPlayer(stream);
+  }.observes('controller.url')
 });
 
 App.HlsView = App.GenericPlayerView.extend({
   templateName: 'hls',
   didInsertElement: function() {
-    if (this.get('isMobile')){
-      if (MobileEsp.IsAndroid) {
-        $("#player").html('<a class="player-link" href="' + this.get('controller.url') + '"><div class="play-link-wrapper"><p></p></div></a>');
-      } else {
-        this.flowPlayer();
-      }
+    if (this.get('isMobile') && MobileEsp.IsAndroid){
+      $("#player").html('<a class="player-link" style="width:' + this.get('controller.settings.playerWidth') + 'px; height:' + this.get('controller.settings.playerHeight') + 'px;" href="' + this.get('controller.url') + '"><div style="width:' + this.get('controller.settings.playerWidth') + 'px; height:' + this.get('controller.settings.playerHeight') + 'px;" class="play-link-wrapper"><p></p></div></a>');
     } else {
       this.jwPlayer('html5');
     }
-  }
+  },
+  // Restarts the player when url changes
+  restartPlayer: function() {
+    if (this.state === 'inDOM'){ // Only when player in the dom
+      //this.rerender();
+      jwplayer().load([{
+        file: this.get('controller.url') 
+      }]);
+      jwplayer().play();
+    }
+
+   //this.jwPlayer('html5');
+  }.observes('controller.url')
 });
 
 App.FlashView = App.GenericPlayerView.extend({
   templateName: 'flash',
   didInsertElement: function() {
     this.jwPlayer('flash');
+      //this.flowPlayer();
   }
 });
 
