@@ -15,30 +15,55 @@ App.PlayerController = Ember.ArrayController.extend({
     if (Em.isEmpty(object)) return false;
     return object.get('technology.technologyType');
   },
-  channel: function() {
-    return this.controllerFor('channel');
-  }.property(),
+  channelBinding: 'controllers.channel',
 
   // Computed properties
-  currentStream: function() {
-    var idx = this.get('_currentIndex');
-    return this.get('content').objectAt(idx); 
-  }.property('content.@each', '_currentIndex'),
-  streamsLength: function() {
+  isMobile: function(){
+    return (MobileEsp.IsTierIphone || MobileEsp.IsTierTablet);
+  }.property(),
+  streams: function() {
     var streams = this.get('content');
+    return streams.filterProperty('quality', this.get('currentQuality'));
+  }.property('content.@each'),
+
+  currentQuality: function() {
+    var defaultQuality = 'medium';
+    var streams = this.get('content');
+    var qualities = streams.mapProperty('quality');
+    if (qualities.contains(defaultQuality)) {
+      return defaultQuality;
+    } else if (qualities.length > 0) {
+      return qualities[0];
+    } else {
+      return null;
+    };
+  }.property('content.@each'),
+  
+  currentStream: function() {
+    var quality = this.get('currentQuality');
+    var idx = this.get('_currentIndex');
+    return this.get('streams').objectAt(idx); 
+  }.property('content.@each', '_currentIndex'),
+  
+  streamsLength: function() {
+    var streams = this.get('streams');
     if (Em.isEmpty(streams)) return 0;
     return streams.toArray().length;
   }.property('content.@each'),
+
   streamTechnologyType: function(){
     return this.get('currentStream.technology.technologyType')
   }.property('currentStream'),
+
   currentTechnology: function(){
     var tech = this.get('settings.technologies');
     return tech[this.get('_currentTechnologyIndex')];
   }.property('_currentTechnologyIndex'),
+
   isIcecast: function(){
    return 'icecast' === this.get('streamTechnologyType');
   }.property('streamTechnologyType'),
+
   isHls: function(){
    return 'hls' === this.get('streamTechnologyType');
   }.property('streamTechnologyType'),

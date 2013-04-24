@@ -6,9 +6,6 @@ App.PlayerView = Ember.View.extend({
 });
 
 App.GenericPlayerView = Ember.View.extend({
-  isMobile: function(){
-    return (MobileEsp.IsTierIphone || MobileEsp.IsTierTablet);
-  }.property(),
   isAndroid: function() {
     return MobileEsp.os == 'Android';
   }.property(),
@@ -52,6 +49,7 @@ App.IcecastView = App.GenericPlayerView.extend({
   playerId: 'jplayer_1',
   setupPlayer: function(stream) {
     var ready = false;
+    var self = this;
     
     $("#" + this.get('playerId')).jPlayer({
       ready: function (event) {
@@ -96,7 +94,7 @@ App.IcecastView = App.GenericPlayerView.extend({
 App.HlsView = App.GenericPlayerView.extend({
   templateName: 'hls',
   didInsertElement: function() {
-    if (this.get('isMobile') && MobileEsp.IsAndroid){
+    if (this.get('controller.player.isMobile') && MobileEsp.IsAndroid){
       $("#player").html('<a class="player-link" style="width:' + this.get('controller.settings.playerWidth') + 'px; height:' + this.get('controller.settings.playerHeight') + 'px;" href="' + this.get('controller.url') + '"><div style="width:' + this.get('controller.settings.playerWidth') + 'px; height:' + this.get('controller.settings.playerHeight') + 'px;" class="play-link-wrapper"><p></p></div></a>');
     } else {
       this.jwPlayer('html5');

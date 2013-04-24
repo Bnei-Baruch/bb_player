@@ -1,13 +1,12 @@
-url: {{currentStream.url}}
   {{!view App.PlayerWrapperView}}
 {{#if isIcecast}}
-    i{{render 'icecast' currentStream}}i
+    {{render 'icecast' currentStream}}
 {{/if}}
 {{#if isHls}}
-    i{{render 'hls' currentStream}}i
+    {{render 'hls' currentStream}}
 {{/if}}
 {{#if isFlash}}
-    i{{render 'flash' currentStream}}i
+    {{render 'flash' currentStream}}
 {{/if}}
 Quality: {{view Ember.Select 
             contentBinding="controller.content"
@@ -15,3 +14,45 @@ Quality: {{view Ember.Select
             optionLabelPath="content.quality"
             selectionBinding="controller.currentStream"
          }}
+
+
+<br />
+<br />
+<table border="1" cellpadding="4">
+  <tr>
+    <th colspan="2">Current setup</th>
+  </tr>
+  <tr>
+    <td>version</td>
+    <td>{{channel.version}}</td>
+  </tr>
+  <tr>
+    <td>status</td>
+    <td>{{channel.currentStatus}}</td>
+  </tr>
+  <tr>
+    <td>technologies</td>
+    <td>{{settings.technologies}}</td>
+  </tr>
+  <tr>
+    <td>browser</td>
+    <td>{{App.BrowserDetect.browser}}</td>
+  </tr>
+  <tr>
+    <td>OS</td>
+    <td>{{App.BrowserDetect.os}}</td>
+  </tr>
+  <tr>
+    <td>osVersion</td>
+    <td>{{App.BrowserDetect.osVersion}}</td>
+  </tr>
+  <tr>
+    <td>current URL</td>
+    <td>{{currentStream.url}}</td>
+  </tr>
+  <tr>
+    <td>mobile?</td>
+    <td>{{isMobile}}</td>
+  </tr>
+</table>
+

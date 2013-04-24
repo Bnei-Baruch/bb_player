@@ -3,10 +3,8 @@ attr = DS.attr;
 // settings controller will be injected to all controllers as settings property
 Em.ControllerMixin.reopen({
   needs: 'settings',
-  settings: function() {
-    return this.controllerFor('settings');
-  }.property()
-})
+  settings: Ember.computed.alias('controllers.settings')
+});
 
 //var get = Ember.get, fmt = Ember.String.fmt;
 
