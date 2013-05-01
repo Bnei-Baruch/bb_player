@@ -17,7 +17,8 @@ use Rake::Pipeline::Middleware, Rake::Pipeline::Project.new('Assetfile')
 require 'rack-rewrite'
 use Rack::Rewrite do
   rewrite %r{^/player/$}, '/index.html'
-  rewrite %r{^/player/(.*)$}, '/$1'
+  rewrite %r{^/player/\?(.+)$}, '/index.html?$1'
+  rewrite %r{^/player/(.+)$}, '/$1'
   #rewrite %r{^(.*)\/$}, '$1/index.html'
 end
 
