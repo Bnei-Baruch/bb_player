@@ -27,7 +27,7 @@ App.PlayerController = Ember.ArrayController.extend({
   }.property('content.@each'),
 
   currentQuality: function() {
-    var defaultQuality = 'medium';
+    var defaultQuality = this.get('settings.defaultQuality') || 'medium';
     var streams = this.get('content');
     var qualities = streams.mapProperty('quality');
     if (qualities.contains(defaultQuality)) {

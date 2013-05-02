@@ -8,14 +8,20 @@
 {{#if isFlash}}
     {{render 'flash' currentStream}}
 {{/if}}
+
+{{#if settings.showControlls}}
+<div id="controlls">
 Quality: {{view Ember.Select 
             contentBinding="controller.content"
             optionValuePath="content.id"
             optionLabelPath="content.quality"
             selectionBinding="controller.currentStream"
          }}
+</div>         
+{{/if}}
 
-
+{{#if settings.showDebugMode}}
+<div id="debug-mode">
 <br />
 <br />
 <table border="1" cellpadding="4">
@@ -59,4 +65,5 @@ Quality: {{view Ember.Select
     <td>{{isMobile}}</td>
   </tr>
 </table>
-
+</div>
+{{/if}}

@@ -1,3 +1,7 @@
+body{
+  margin: 0;
+  padding: 0;
+}
 a.player-link{
   display: block;
   div.play-link-wrapper {
@@ -10,4 +14,12 @@ a.player-link{
       height: 210px;
     }
   }
+}
+
+#controlls {
+  margin-top: 10px;
+}
+
+#debug-mode {
+  margin-top: 20px;
 }

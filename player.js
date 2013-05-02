@@ -1,5 +1,6 @@
 PlayerBB = {
   url: "http://player.kbb1.com/player/?",
+  iframeId: null,
   config: {
     channelName: 'tv66',
     defaultLanguage: 'he',
@@ -9,6 +10,7 @@ PlayerBB = {
     mediaMode: 'video',
     techPriorities: ['hls', 'flash', 'icecast'],
     showControlls: true,
+    consoleDebug: false,
     showDebugMode: false
   },
 
@@ -31,6 +33,14 @@ PlayerBB = {
     }
   },
 
+  _addControllsHeight: function(){
+    if(this.config.showControlls){
+      return 30;
+    } else {
+      return 0;
+    }
+  },
+
     // update config according to external ob
   _setConfig: function(setup){
     if (typeof setup == 'object' ){
@@ -42,16 +52,34 @@ PlayerBB = {
     }
   },
   
+  // This is used for debugging in console
+  // Adds 'ember' object as proxy to Ember App
+  _getApp: function(){
+    var iframe = document.getElementById(this.iframeId);
+    var inter = window.setInterval(function() {
+      if (iframe.contentWindow.document.readyState === "complete") {
+        window.clearInterval(inter);
+        window.ember = iframe.contentWindow.App;
+      }
+    }, 100);
+  },
+  
   init: function(containerId, setup){
     this._setConfig(setup);
 
+    this.iframeId |= containerId + "-iframe"
     var link = this.url + this._parseParams(); 
     var iframe = document.createElement('iframe');
+    
     iframe.frameBorder = 0;
-    iframe.width = this.config.playerWidth + 10;
-    iframe.height = this.config.playerHeight + this._addDebugHeight();
-    iframe.id = containerId + "-iframe";
+    iframe.width = this.config.playerWidth;
+    iframe.height = this.config.playerHeight + 5 + this._addDebugHeight() + this._addControllsHeight();
+    iframe.id = this.iframeId;
     iframe.setAttribute("src", link);
     document.getElementById(containerId).appendChild(iframe);
+
+    if (this.config.consoleDebug){
+      this._getApp();
+    }
   },
 }

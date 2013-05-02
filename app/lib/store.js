@@ -6,7 +6,7 @@ App.Store = DS.Store.extend({
   revision: 12,
   adapter: DS.RESTAdapter.create({
     url: 'http://player.kbb1.com',
-    //url: 'http://10.0.0.10',
+    //url: 'http://10.66.9.54',
     
     namespace: 'api'
   })
