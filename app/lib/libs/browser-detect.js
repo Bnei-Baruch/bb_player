@@ -20,10 +20,45 @@ App.BrowserDetect.reopenClass({
     }
     this.os = osItem.identity;
 
-    if (this.os == 'Android'){
+    //if (this.os == 'Android'){
       var ua = navigator.userAgent;
-      this.osVersion = parseFloat(ua.slice(ua.indexOf("Android") + 8));
-    }
+      //this.osVersion = parseFloat(ua.slice(ua.indexOf("Android") + 8));
+      //debugger;
+      this.osVersion = this.getOSVersion(osItem.versionSearch || osItem.identity);
+    //}
+  },
+  getOSVersion: function(searchString){
+    var ua = navigator.userAgent;
+    var version = parseFloat(ua.slice(ua.indexOf(searchString) + searchString.length + 1).replace(/_/g, '.'));
+    if (searchString == 'Windows NT') {
+      switch(version)
+      {
+        case 5:
+          version = 'Windows 2000'; 
+        break;
+        case 5.1:
+          version = 'Windows XP'; 
+        break;
+        case 5.2:
+          version = 'Windows Server 2003; Windows XP x64 Edition';
+        break;
+        case 6:
+          version = 'Windows Vista';
+        break;
+        case 6.1:
+          version = 'Windows 7';
+        break;
+        case 6.2:
+          version = 'Windows 8';
+        break;
+        case 6.3:
+          version = 'Windows 8.1 Preview';
+        break;
+        default:
+          version = null;
+      }
+    } 
+    return version;
   },
   searchString: function (data) {
     return (data.find(function(item){
@@ -115,29 +150,38 @@ App.BrowserDetect.reopenClass({
   ],
   _dataOS : [
     {
-      string: navigator.platform,
+      string: navigator.userAgent,
       subString: "Win",
-      identity: "Windows"
+      identity: "Windows",
+      versionSearch: "Windows NT"
     },
     {
-      string: navigator.platform,
-      subString: "Mac",
-      identity: "Mac"
+      string: navigator.userAgent,
+      subString: "iPad",
+      identity: "iPad",
+      versionSearch: "CPU OS"
     },
     {
       string: navigator.userAgent,
       subString: "iPhone",
-      identity: "iPhone/iPod"
-    },
-    {
-      string: navigator.platform,
-      subString: "Linux",
-      identity: "Linux"
+      identity: "iPhone/iPod",
+      versionSearch: "iPhone OS"
     },
     {
       string: navigator.userAgent,
       subString: "Android",
       identity: "Android"
+    },
+    {
+      string: navigator.platform,
+      subString: "Mac",
+      identity: "Mac",
+      versionSearch: "Mac OS X"
+    },
+    {
+      string: navigator.platform,
+      subString: "Linux",
+      identity: "Linux"
     }
   ]
 

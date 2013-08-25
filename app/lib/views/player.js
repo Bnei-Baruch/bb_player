@@ -1,5 +1,6 @@
 App.PlayerView = Ember.View.extend({
   playerError: function() {
+    debugger;
     this.get('controller').send('playNextStream');
     this.rerender();
   }
@@ -12,25 +13,7 @@ App.GenericPlayerView = Ember.View.extend({
   controller: function(){
     return this.get('parentView.context');
   }.property(),
-  jwPlayer: function(primary){
-    var self = this;
-    playerSetup = {
-      file: this.get('controller.url'),
-      height: this.get('controller.settings.playerHeight'),
-      width: this.get('controller.settings.playerWidth'),
-      autostart: true,
-      primary: primary,
-      skin: 'stormtrooper'
-    };
-    
-    jwplayer("player").setup(playerSetup);
 
-    jwplayer("player").onError( function(event){
-      // self.$() - my current view element
-      self.$().trigger('playererror');
-    });
-
-  },
   flowPlayer: function(){
     flowplayer.conf.ratio = 3/4;
     flowplayer(function(api, root) {
@@ -70,10 +53,11 @@ App.IcecastView = App.GenericPlayerView.extend({
       swfPath: "assets/swf",
       supplied: "mp3",
       preload: "none",
-      wmode: "window"
+      wmode: "window",
+      smoothPlayBar: true,
+      keyEnabled: true
     });
   },
-  
   didInsertElement: function() {
     var stream = {
       title: "Audio stream player",
@@ -82,6 +66,7 @@ App.IcecastView = App.GenericPlayerView.extend({
     this.setupPlayer(stream);
   },
   restartPlayer: function() {
+    debugger;
     var stream = {
       title: "Audio stream player",
       mp3: this.get('controller.url')
@@ -91,35 +76,104 @@ App.IcecastView = App.GenericPlayerView.extend({
   }.observes('controller.url')
 });
 
-App.HlsView = App.GenericPlayerView.extend({
-  templateName: 'hls',
-  didInsertElement: function() {
-    if (this.get('controller.player.isMobile') && MobileEsp.IsAndroid){
-      $("#player").html('<a class="player-link" style="width:' + this.get('controller.settings.playerWidth') + 'px; height:' + this.get('controller.settings.playerHeight') + 'px;" href="' + this.get('controller.url') + '"><div style="width:' + this.get('controller.settings.playerWidth') + 'px; height:' + this.get('controller.settings.playerHeight') + 'px;" class="play-link-wrapper"><p></p></div></a>');
-    } else {
-      this.jwPlayer('html5');
-    }
+App.JwPlayerComponent = Em.Component.extend({
+  heigh: null,
+  width: null,
+  url: null,
+  timeout: 10,
+  playerId: 'jwplayer',
+  _timeoutId:  null,
+  
+  
+  didInsertElement: function(){
+    this.setup();
+    this.play();
   },
-  // Restarts the player when url changes
-  restartPlayer: function() {
-    if (this.state === 'inDOM'){ // Only when player in the dom
-      //this.rerender();
-      jwplayer().load([{
-        file: this.get('controller.url') 
-      }]);
-      jwplayer().play();
-    }
 
-   //this.jwPlayer('html5');
-  }.observes('controller.url')
+  setup: function(){
+    debugger;
+    var playerId = this.get('playerId')
+    var self = this;
+    playerSetup = {
+      file: this.get('url'),
+      height: this.get('height'),
+      width: this.get('width'),
+      autostart: false,
+      skin: 'stormtrooper'
+    };
+    
+    jwplayer(playerId).setup(playerSetup);
+
+    jwplayer(playerId).onSetupError( function(event){
+      debugger;
+      // self.$() - my current view element
+      self._raiseError();
+    });
+
+    jwplayer(playerId).onError( function(event){
+      debugger;
+      // self.$() - my current view element
+      self._raiseError();
+    });
+
+  },
+
+  play: function(){
+    debugger;
+    var currentUrl = this.get('url')
+    if (Em.isEmpty(currentUrl)) return;
+
+    jwplayer(this.playerId).load([{
+      file: currentUrl
+    }]);
+    jwplayer().play();
+
+    // in case the plaer doesn't start playing after x seconds
+    this._playerTimeoutObserver();
+  }.observes('url'),
+
+  willDestroy: function() {
+    this._clearTimeout(); 
+    this._super();
+  },
+
+  _raiseError: function() {
+    this.$().parent().trigger('playererror');
+  },
+
+  _playerTimeoutObserver: function() {
+    this._clearTimeout(); 
+    var self = this;
+    var timeoutId = setTimeout(function() {
+      debugger;
+      var state = jwplayer().getState();
+      if (state !== 'PLAYING') self._raiseError();
+    }, this.get('timeout') * 1000);
+    this.set('_timeoutId', timeoutId);
+  },
+
+  _clearTimeout: function() {
+    var timeoutId = this.get('_timeoutId');
+    if (!Em.isEmpty(timeoutId)) {
+      clearTimeout(timeoutId);
+    }
+  }
+
+});
+
+App.HlsView = App.GenericPlayerView.extend({
+  mobileMode: function(){
+    return this.get('controller.player.isMobile') && MobileEsp.IsAndroid;
+  }.property(),
+
+  mobileStyle: function(){
+    return 'width:' + this.get('controller.settings.playerWidth') + 'px; height:' + this.get('controller.settings.playerHeight') + 'px;'
+  }.property()
+
 });
 
 App.FlashView = App.GenericPlayerView.extend({
   templateName: 'flash',
-  didInsertElement: function() {
-    this.jwPlayer('flash');
-      //this.flowPlayer();
-  }
 });
 
 //App.PlayerWrapperView = Ember.ContainerView.extend({

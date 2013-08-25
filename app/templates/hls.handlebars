@@ -1,1 +1,9 @@
- <div id="player" data-ratio="0.75"></div>
+{{#if view.mobileMode}}
+  <div id="player">
+    <a class="player-link" {{bindAttr style="view.mobileStyle" href="url"}} >
+      <div class="play-link-wrapper" {{bindAttr style="view.mobileStyle"}}><p></p></div>
+    </a>
+  </div>
+{{else}}
+  {{jw-player url=controller.player.currentStream.url width=controller.settings.playerWidth height=controller.settings.playerHeight}}
+{{/if}}

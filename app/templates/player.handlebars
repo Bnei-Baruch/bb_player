@@ -13,9 +13,9 @@
 <div id="controlls">
 Quality: {{view Ember.Select 
             contentBinding="controller.content"
-            optionValuePath="content.id"
+            optionValuePath="content.quality"
             optionLabelPath="content.quality"
-            selectionBinding="controller.currentStream"
+            valueBinding="controller.currentQuality"
          }}
 </div>         
 {{/if}}
@@ -45,8 +45,16 @@ Quality: {{view Ember.Select
     <td>{{settings.technologies}}</td>
   </tr>
   <tr>
+    <td>current Technology</td>
+    <td>{{currentTechnology}}</td>
+  </tr>
+  <tr>
     <td>browser</td>
     <td>{{App.BrowserDetect.browser}}</td>
+  </tr>
+  <tr>
+    <td>browserVersion</td>
+    <td>{{App.BrowserDetect.browserVersion}}</td>
   </tr>
   <tr>
     <td>OS</td>

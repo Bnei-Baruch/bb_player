@@ -1,10 +1,10 @@
 require('bb-player/ext');
 require('bb-player/env');
 
-Ember.LOG_BINDINGS = true;
+Ember.LOG_BINDINGS = false;
 
 App = Ember.Application.create({
-  LOG_TRANSITIONS: true,
+  LOG_TRANSITIONS: false,
   ready: function() {
     // this.set('router.enableLogging', true);
   },

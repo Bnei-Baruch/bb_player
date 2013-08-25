@@ -8,10 +8,11 @@ App.SettingsController = Ember.Controller.extend({
   techPriorities: ['hls', 'flash', 'icecast'],
   technologies: [],
   channelName: 'tv66',
-  showControlls: true,
+  showControlls: false,
   showDebugMode: false,
   mediaMode: 'video',
-  playerVersion: 0.2,
+  playerVersion: 0.3,
+  apiURL: 'http://player.kbb1.com',
 
   _setOriginParams: function(){
     if (Em.isEmpty(location.search)){

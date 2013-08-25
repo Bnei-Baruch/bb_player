@@ -3,29 +3,29 @@ App.Router.map(function() {
 });
 
 App.ChannelRoute = Ember.Route.extend({
-  model: function(params) {
+  model: function() {
     var channel = this.controllerFor('channel').channelName;
-    return App.Channel.find(channel);
-  },
-  enter: function() {
-    this.send('startPolling', this.controllerFor('channel'));
+    //return App.Channel.find(channel);
+    record = App.Channel.createRecord({
+      id: channel,
+      status: 'playerLoading',
+      version: 0,
+      interval: 2
+    });
+    // workarounf to make the record in state of saved so poling will work (otherwise its in state uncommited)
+    record.stateManager.transitionTo('loaded.saved');
+    return record;
   },
   renderTemplate: function() {
     this.render('channel', {
       into: 'application'
     });
   },
+  setupController: function(controller, model) {
+    controller.set('model', model);
+    //this.events.startPolling(controller);
+  },
   events: {
-    getChannelDetails: function(controller) {
-      controller.set('languages', App.Language.find({
-        channel_id: controller.channelName
-      }));
-    },
-    startPolling: function(controller) {
-      controller.poller.start(function() {
-        controller.content.reload();
-      }, 5);
-    },
     showSlide: function() {
       this.transitionTo('slide');
     },

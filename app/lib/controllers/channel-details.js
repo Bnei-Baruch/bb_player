@@ -1,5 +1,5 @@
-App.ChannelDetailsController = Ember.ArrayController.extend({
-  getChannelDetails: function() {
+//App.ChannelDetailsController = Ember.ArrayController.extend({
+  //getChannelDetails: function() {
 
-  }
-});
+  //}
+//});
