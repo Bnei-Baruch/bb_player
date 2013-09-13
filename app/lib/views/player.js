@@ -1,6 +1,5 @@
 App.PlayerView = Ember.View.extend({
   playerError: function() {
-    debugger;
     this.get('controller').send('playNextStream');
     this.rerender();
   }
@@ -66,7 +65,6 @@ App.IcecastView = App.GenericPlayerView.extend({
     this.setupPlayer(stream);
   },
   restartPlayer: function() {
-    debugger;
     var stream = {
       title: "Audio stream player",
       mp3: this.get('controller.url')
@@ -91,7 +89,6 @@ App.JwPlayerComponent = Em.Component.extend({
   },
 
   setup: function(){
-    debugger;
     var playerId = this.get('playerId')
     var self = this;
     playerSetup = {
@@ -105,13 +102,11 @@ App.JwPlayerComponent = Em.Component.extend({
     jwplayer(playerId).setup(playerSetup);
 
     jwplayer(playerId).onSetupError( function(event){
-      debugger;
       // self.$() - my current view element
       self._raiseError();
     });
 
     jwplayer(playerId).onError( function(event){
-      debugger;
       // self.$() - my current view element
       self._raiseError();
     });
@@ -119,7 +114,6 @@ App.JwPlayerComponent = Em.Component.extend({
   },
 
   play: function(){
-    debugger;
     var currentUrl = this.get('url')
     if (Em.isEmpty(currentUrl)) return;
 
@@ -145,7 +139,6 @@ App.JwPlayerComponent = Em.Component.extend({
     this._clearTimeout(); 
     var self = this;
     var timeoutId = setTimeout(function() {
-      debugger;
       var state = jwplayer().getState();
       if (state !== 'PLAYING') self._raiseError();
     }, this.get('timeout') * 1000);

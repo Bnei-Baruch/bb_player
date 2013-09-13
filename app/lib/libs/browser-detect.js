@@ -23,7 +23,6 @@ App.BrowserDetect.reopenClass({
     //if (this.os == 'Android'){
       var ua = navigator.userAgent;
       //this.osVersion = parseFloat(ua.slice(ua.indexOf("Android") + 8));
-      //debugger;
       this.osVersion = this.getOSVersion(osItem.versionSearch || osItem.identity);
     //}
   },

@@ -6,9 +6,7 @@
       //this.stop();
     //}
     //var self = this;
-      //debugger;
     //this._intervalId = setInterval(function(){
-      //debugger;
       //App.Channel.find(self.settings.channelName);
     //}, time*1000);
   //},

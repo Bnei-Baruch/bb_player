@@ -87,7 +87,6 @@ App.PlayerController = Ember.ArrayController.extend({
     }).then(function(languages){
       self.set('_languages', languages);
       self._getStreamData();
-      debugger;
     });
     return remoteLanguages;
   }.property().volatile(), // do not cache this property (I'm manually caching it)
@@ -111,12 +110,10 @@ App.PlayerController = Ember.ArrayController.extend({
   }, 'content.@each'),
   
   currentIndexShoudChange: function(){
-    debugger;
     this.set('currentIndex', 0);
   }.observes('currentQuality'),
 
   languagesChanged: Ember.observer(function(controller, key) {
-    debugger;
     if (Em.isEmpty(controller.content)) return;
     controller.content.reload();
   }, 'languages.@each'),
@@ -126,14 +123,12 @@ App.PlayerController = Ember.ArrayController.extend({
   }, 'channel.currentVersion'),
 
   currentStreamShouldChange: Ember.observer(function(controller, key) {
-    //debugger;
     var stream = controller.get('currentStream');
     var quality = controller.get('currentQuality');
     var idx = controller.get('currentIndex');
     //var newStream = controller.get('content').findProperty('id', idx.toString());
     var newStream = controller.get('streamsInQuality').objectAt(idx);
     if ((Em.isNone(stream) && newStream != undefined) || (!Em.isNone(newStream) && stream.get('url') != newStream.get('url'))){
-      debugger;
       this.set('currentStream', Em.copy(newStream));
     } 
   }, 'content.@each', 'currentIndex', 'currentQuality'),
@@ -141,7 +136,6 @@ App.PlayerController = Ember.ArrayController.extend({
 
   //functions
   playNextStream: function() {
-    debugger;
     var idx = this.get('currentIndex') + 1;
     if (idx >= this.get('streamsLength')){ // in case of last stream in the current tech
       var success = this._getNextTechnology();
