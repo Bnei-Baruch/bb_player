@@ -80,7 +80,7 @@ App.PlayerController = Ember.ArrayController.extend({
   languages: function(){
     var cachedLanguages = this.get('_languages');
     if (!Em.isNone(cachedLanguages)) return cachedLanguages;
-    self = this;
+    var self = this;
     var remoteLanguages = App.Language.find({
       channel_id: this.get('settings.channelName'),
       ts: Date.now()
