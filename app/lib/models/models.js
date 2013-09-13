@@ -4,9 +4,7 @@ DS.Model.reopen({
 
   becameError: function(record){
     // TODO: implement sending message to developers
-    //debugger;
     //record.stateManager.transitionTo('loaded.saved');
-    //debugger;
     //record.stateManager.transitionTo('loaded.updated');
     //status = record.get('status');
     //if (status != 'open') {
